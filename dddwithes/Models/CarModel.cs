@@ -20,13 +20,15 @@ namespace learning.Model
 
         public List<Car> GetAllCars() => car.Cars.ToList();
 
-        public void ChangeCarManufacture(Guid id, string model=null, string make=null, int? year=null)
+        public Car ChangeCarManufacture(ChangeCarManufacture changeCarManufacture)
         {
-            var ob = car.Cars.FirstOrDefault(c => c.Id == id);
-            ob.Model = model ?? ob.Model;
-            ob.Make = make ?? ob.Make;
-            ob.Year = year ?? ob.Year;
+            var ob = car.Cars.FirstOrDefault(c => c.Id == changeCarManufacture.AggreagteId);
+            ob.Model = changeCarManufacture.Model ?? ob.Model;
+            ob.Make = changeCarManufacture.Make ?? ob.Make;
+            ob.Year = changeCarManufacture.Year ?? ob.Year;
+            car.Cars.Update(ob);
             car.SaveChanges();
+            return ob;
         }
 
         public Car CreateNewCarFromEvent(CreateCar carEvent)
@@ -43,10 +45,8 @@ namespace learning.Model
             entityCar.CarDoors = carEvent.CarDoors;
             entityCar.CarDoorsWheelType = carEvent.CarDoorsWheelType;
             entityCar.Color = carEvent.Color;
-
             car.Cars.Add(entityCar);
             car.SaveChanges();
-
             return entityCar;
         }
     }

@@ -26,5 +26,10 @@ namespace learning.Aggregates
         {
             return _carModel.GetAllCars();
         }
+
+        internal object UpdateManufacture(ChangeCarManufacture car)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
