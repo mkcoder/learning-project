@@ -1,10 +1,12 @@
 ﻿using System;
 using learning.DomainObjects;
+using learning.Entity;
+using MediatR;
 using Newtonsoft.Json.Linq;
 
 namespace learning.Events
 {
-    public class CreateCar : Event
+    public class CreateCar : Event, IRequest<Car>
     {
         public override int Version { get => 1; }
         public override string EventName { get => "CarCreated"; }
@@ -20,7 +22,7 @@ namespace learning.Events
         public string WindowType { get; set; }
     }
 
-    public class ChangeCarManufacture : Event
+    public class ChangeCarManufacture : Event, IRequest<Car>
     {
         public override int Version { get => 1; }
         public override string EventName { get => "CarManufactureChanged"; }
@@ -30,7 +32,7 @@ namespace learning.Events
         public int? Year { get; set; }
     }
 
-    public class ChangeCarDescription : Event
+    public class ChangeCarDescription : Event, IRequest<ChangeCarDescription>
     {
         public override int Version { get => 1; }
         public override string EventName { get => "CarDescriptionChanged"; }
@@ -39,7 +41,7 @@ namespace learning.Events
         public string Color { get; set; }
     }
 
-    public class ChangeCarFeatures : Event
+    public class ChangeCarFeatures : Event, IRequest<ChangeCarFeatures>
     {
         public override int Version { get => 1; }
         public override string EventName { get => "CarFeaturesChanged"; }

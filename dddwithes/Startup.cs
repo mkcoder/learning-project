@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using learning.Aggregates;
 using learning.DbContexts;
 using learning.Model;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -37,6 +39,7 @@ namespace testing
                 opt.UseSqlServer(connection);
             });
 
+            services.AddMediatR(typeof(Startup));
             services.AddTransient<CarContext, CarContext>();
             services.AddTransient<CarModel, CarModel>();
             services.AddTransient<CarAggregate, CarAggregate>();
