@@ -1,20 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using dddwithes.Entities;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace testing.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class InventoryController : ControllerBase
     {
+        private readonly IMediator mediator;
+
+        public InventoryController(IMediator mediator)
+        {
+            this.mediator = mediator;
+        }
+
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public async Task<IEnumerable<Inventory>> GetAsync()
         {
-            return new string[] { "value1", "value2" };
+            return await mediator.Send(new GetAllInvetory());
         }
 
         // GET api/values/5
@@ -41,5 +51,9 @@ namespace testing.Controllers
         public void Delete(int id)
         {
         }
+    }
+
+    public class GetAllInvetory : IRequest<IEnumerable<Inventory>>
+    {
     }
 }

@@ -1,16 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using dddwithes.Entities;
 using learning.DbContexts;
 using learning.Events;
 using MediatR;
+using testing.Controllers;
 
 namespace dddwithes.Aggregates
 {
     public class InventoryAggregate :
         INotificationHandler<CarCreated>,
-        IRequestHandler<RequestAddCarToInventory, CarAddedToInventory>
+        IRequestHandler<RequestAddCarToInventory, CarAddedToInventory>,
+        IRequestHandler<GetAllInvetory, IEnumerable<Inventory>>
     {
         private readonly IMediator mediator;
         private readonly CarContext context;
@@ -21,10 +25,11 @@ namespace dddwithes.Aggregates
             this.context = context;
         }
 
+        public async Task<IEnumerable<Inventory>> Handle(GetAllInvetory request, CancellationToken cancellationToken)
+            => context.Inventory.ToList();
+
         public async Task Handle(CarCreated notification, CancellationToken cancellationToken)
-        {
-            await mediator.Send(RequestAddCarToInventory.From(notification));
-        }
+            => await mediator.Send(RequestAddCarToInventory.From(notification));
 
         public async Task<CarAddedToInventory> Handle(RequestAddCarToInventory request, CancellationToken cancellationToken)
         {
@@ -42,5 +47,6 @@ namespace dddwithes.Aggregates
             await mediator.Publish(evt);
             return evt;
         }
+
     }
 }
