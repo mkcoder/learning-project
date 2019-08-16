@@ -29,7 +29,7 @@ namespace learning.AggregateController
         public ActionResult GetAllCars() => Ok(_carAggregate.GetAllCars());
 
         [HttpPost]
-        public async Task<ActionResult> CreateCarAsync([FromBody]CreateCar car)
+        public async Task<ActionResult> CreateCarAsync([FromBody]RequestCreateCar car)
         {
             try
             {

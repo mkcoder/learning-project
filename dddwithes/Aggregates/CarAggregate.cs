@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using dddwithes.Entities;
 using learning.Entity;
 using learning.Events;
 using learning.Model;
@@ -9,20 +10,17 @@ using MediatR;
 
 namespace learning.Aggregates
 {
-    public class CarAggregate : AggregateRoot, IRequestHandler<CreateCar, Car>, IRequestHandler<ChangeCarManufacture, Car>
+    public class CarAggregate : AggregateRoot, IRequestHandler<RequestCreateCar, CarCreated>, IRequestHandler<ChangeCarManufacture, Car>
     {
         private readonly CarModel _carModel;
+        private readonly IMediator _mediator;
 
         public override Guid Aggregate { get; } = Guid.NewGuid();
 
-        public CarAggregate(CarModel carModel)
+        public CarAggregate(CarModel carModel,IMediator mediator)
         {
             _carModel = carModel;
-        }
-
-        public Car CreateCar(CreateCar carEvent)
-        {
-            return _carModel.CreateNewCarFromEvent(carEvent);
+            _mediator = mediator;
         }
 
         internal List<Car> GetAllCars()
@@ -30,14 +28,13 @@ namespace learning.Aggregates
             return _carModel.GetAllCars();
         }
 
-        internal Car UpdateManufacture(ChangeCarManufacture car)
+        public async Task<CarCreated> Handle(RequestCreateCar request, CancellationToken cancellationToken)
         {
-            return _carModel.ChangeCarManufacture(car);
-        }
-
-        public Task<Car> Handle(CreateCar request, CancellationToken cancellationToken)
-        {
-            return Task.Run(() => _carModel.CreateNewCarFromEvent(request));
+            var car = await _carModel.CreateNewCarFromEvent(request);
+            var carCreated = CarCreated.From(car);
+            await _mediator.Publish(AggregateEvent.Create<RequestCreateCar>(car.Id, carCreated, request));
+            await _mediator.Publish(carCreated);
+            return carCreated;
         }
 
         public Task<Car> Handle(ChangeCarManufacture request, CancellationToken cancellationToken)

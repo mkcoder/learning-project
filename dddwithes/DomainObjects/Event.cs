@@ -5,7 +5,8 @@ namespace learning.DomainObjects
 {
     public abstract class Event
     {
-        public Guid AggreagteId { get; set; }
+		public Guid EventId { get; } = Guid.NewGuid();
+		public Guid AggreagteId { get; set; }
         public virtual int Version { get => 1; }
         public abstract string EventName { get; }
     }

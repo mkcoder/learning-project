@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using learning.DbContexts;
 using learning.DomainObjects;
 using learning.Entity;
@@ -31,10 +32,9 @@ namespace learning.Model
             return ob;
         }
 
-        public Car CreateNewCarFromEvent(CreateCar carEvent)
+        public async Task<Car> CreateNewCarFromEvent(RequestCreateCar carEvent)
         {
             var entityCar = new Car();
-            entityCar.Id = carEvent.AggreagteId;
             entityCar.Make = carEvent.Make;
             entityCar.Model = carEvent.Model;
             entityCar.Sunroof = carEvent.Sunroof;
@@ -46,7 +46,7 @@ namespace learning.Model
             entityCar.CarDoorsWheelType = carEvent.CarDoorsWheelType;
             entityCar.Color = carEvent.Color;
             car.Cars.Add(entityCar);
-            car.SaveChanges();
+            await car.SaveChangesAsync();
             return entityCar;
         }
     }
