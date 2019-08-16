@@ -20,6 +20,12 @@ namespace dddwithes.Controllers
 
         public CarContext CarContext { get; }
 
+        [HttpGet]
+        public List<AggregateEvent> GetEvents()
+        {
+            return CarContext.AggregateEvents.ToList();
+        }
+
         [HttpGet("{id}")]
         public List<AggregateEvent> GetEvents(Guid id)
         {

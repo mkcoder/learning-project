@@ -12,5 +12,6 @@ namespace learning.DbContexts
 
         public DbSet<Car> Cars { get; set; }
         public DbSet<AggregateEvent> AggregateEvents { get; set; }
+        public DbSet<Inventory> Inventory { get; set; }
     }
 }

@@ -21,14 +21,14 @@ namespace learning.Model
 
         public List<Car> GetAllCars() => car.Cars.ToList();
 
-        public Car ChangeCarManufacture(ChangeCarManufacture changeCarManufacture)
+        public async Task<Car> ChangeCarManufacture(RequestChangeCarManufacture changeCarManufacture)
         {
-            var ob = car.Cars.FirstOrDefault(c => c.Id == changeCarManufacture.AggreagteId);
+            var ob = car.Cars.FirstOrDefault(c => c.Id == changeCarManufacture.AggregateId);
             ob.Model = changeCarManufacture.Model ?? ob.Model;
             ob.Make = changeCarManufacture.Make ?? ob.Make;
             ob.Year = changeCarManufacture.Year ?? ob.Year;
             car.Cars.Update(ob);
-            car.SaveChanges();
+            await car.SaveChangesAsync();
             return ob;
         }
 

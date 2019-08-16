@@ -10,7 +10,10 @@ using MediatR;
 
 namespace learning.Aggregates
 {
-    public class CarAggregate : AggregateRoot, IRequestHandler<RequestCreateCar, CarCreated>, IRequestHandler<ChangeCarManufacture, Car>
+    public class CarAggregate : AggregateRoot,
+        IRequestHandler<RequestCreateCar, CarCreated>,
+        IRequestHandler<RequestChangeCarManufacture, CarManufactureChanged>,
+        IRequestHandler<RequestChangeCarDescription, CarDescriptionChanged>
     {
         private readonly CarModel _carModel;
         private readonly IMediator _mediator;
@@ -37,9 +40,18 @@ namespace learning.Aggregates
             return carCreated;
         }
 
-        public Task<Car> Handle(ChangeCarManufacture request, CancellationToken cancellationToken)
+        public async Task<CarManufactureChanged> Handle(RequestChangeCarManufacture request, CancellationToken cancellationToken)
         {
-            return Task.Run(() => _carModel.ChangeCarManufacture(request));
+            var result = await _carModel.ChangeCarManufacture(request);
+            var evt = CarManufactureChanged.From(result);
+            await _mediator.Publish(AggregateEvent.Create<RequestChangeCarManufacture>(evt.AggregateId, evt, request));
+            await _mediator.Publish(evt);
+            return evt;
+        }
+
+        public Task<CarDescriptionChanged> Handle(RequestChangeCarDescription request, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

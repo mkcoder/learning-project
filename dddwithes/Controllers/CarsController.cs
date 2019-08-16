@@ -43,7 +43,7 @@ namespace learning.AggregateController
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateCarAsync([FromBody]ChangeCarManufacture car)
+        public async Task<ActionResult> UpdateCarAsync([FromBody]RequestChangeCarManufacture car)
         {
             try
             {
